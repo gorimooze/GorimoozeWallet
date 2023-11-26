@@ -1,7 +1,5 @@
-﻿using GorimoozeWallet.Data;
-using GorimoozeWallet.Dto;
+﻿using GorimoozeWallet.Dto;
 using GorimoozeWallet.Interfaces;
-using GorimoozeWallet.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GorimoozeWallet.Controllers
@@ -44,15 +42,12 @@ namespace GorimoozeWallet.Controllers
         [HttpPut("{currencyId}")]
         public IActionResult Update(int currencyId, [FromBody] CurrencyDto currency)
         {
-            if (currency == null)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             _currencyService.Update(currency);
 
             return NoContent();
-            var existCurrency = _currencyService.GetCurrencyById(currencyId);
-
-
         }
 
         [HttpDelete("{currencyId}")]

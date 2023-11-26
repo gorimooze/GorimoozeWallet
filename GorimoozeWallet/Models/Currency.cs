@@ -22,5 +22,7 @@ namespace GorimoozeWallet.Models
 
         public string? ImageName { get; set; } // Image file name
         public byte[]? ImageData { get; set; } // Image data as a byte array
+
+        public ICollection<Wallet> Wallet { get; set; }
     }
 }

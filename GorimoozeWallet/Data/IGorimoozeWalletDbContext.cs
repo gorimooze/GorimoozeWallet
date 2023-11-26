@@ -1,5 +1,4 @@
 ﻿using GorimoozeWallet.Dto;
-using GorimoozeWallet.Models;
 
 namespace GorimoozeWallet.Data
 {
@@ -9,5 +8,9 @@ namespace GorimoozeWallet.Data
         ICollection<CurrencyDto> Currency_GetAllCurrency();
         CurrencyDto Currency_GetById(long id);
         void Currency_CreateOrUpdateOrDelete(CurrencyDto currency);
+        ICollection<WalletDto> Wallet_GetAll();
+        WalletDto Wallet_GetById(long id);
+        void Wallet_CreateOrUpdate(WalletDto wallet);
+        void Wallet_Delete(long id);
     }
 }
