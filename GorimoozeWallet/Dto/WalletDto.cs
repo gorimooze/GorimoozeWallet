@@ -12,7 +12,7 @@ namespace GorimoozeWallet.Dto
 
         public long CurrencyId { get; set; }
 
-        public decimal? Score { get; set; }
+        public double? Score { get; set; }
 
         public bool? IsLocked { get; set; }
 

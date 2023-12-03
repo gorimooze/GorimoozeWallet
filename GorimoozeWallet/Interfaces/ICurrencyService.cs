@@ -8,6 +8,6 @@ namespace GorimoozeWallet.Interfaces
         CurrencyDto GetCurrencyById(long id);
         void Create(CurrencyDto currency);
         void Update(CurrencyDto currency);
-        void Delete(CurrencyDto currency);
+        void Delete(long currencyId);
     }
 }

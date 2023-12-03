@@ -27,6 +27,16 @@ namespace GorimoozeWallet.Controllers
             return Ok(users);
         }
 
+        [HttpGet("{currencyId}")]
+        public IActionResult GetById(long currencyId)
+        {
+            if (currencyId == 0)
+                return BadRequest(ModelState);
+
+            var model = _currencyService.GetCurrencyById(currencyId);
+
+            return Ok(model);
+        }
 
         [HttpPost]
         public IActionResult Create([FromBody] CurrencyDto currency)
@@ -40,7 +50,7 @@ namespace GorimoozeWallet.Controllers
         }
 
         [HttpPut("{currencyId}")]
-        public IActionResult Update(int currencyId, [FromBody] CurrencyDto currency)
+        public IActionResult Update(long currencyId, [FromBody] CurrencyDto currency)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -51,15 +61,12 @@ namespace GorimoozeWallet.Controllers
         }
 
         [HttpDelete("{currencyId}")]
-        public IActionResult Delete(int currencyId)
+        public IActionResult Delete(long currencyId)
         {
-            var existCurrency = _currencyService.GetCurrencyById(currencyId);
-            if (existCurrency == null)
-            {
-                return NotFound();
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            _currencyService.Delete(existCurrency);
+            _currencyService.Delete(currencyId);
 
             return NoContent();
         }

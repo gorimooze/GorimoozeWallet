@@ -25,17 +25,31 @@ namespace GorimoozeWallet.Services
 
         public void Create(CurrencyDto currency)
         {
+            currency.IsDeleted = false;
             _context.Currency_CreateOrUpdateOrDelete(currency);
         }
 
         public void Update(CurrencyDto currency)
         {
-            _context.Currency_CreateOrUpdateOrDelete(currency);
+            _context.Currency_CreateOrUpdateOrDelete(new CurrencyDto()
+            {
+                Id = currency.Id,
+                Name = currency.Name,
+                ShortName = currency.ShortName,
+                StateActivity = currency.StateActivity,
+                IsActive = currency.IsActive,
+                ImageName = currency.ImageName,
+                ImageData = currency.ImageData
+            });
         }
 
-        public void Delete(CurrencyDto currency)
+        public void Delete(long currencyId)
         {
-            _context.Currency_CreateOrUpdateOrDelete(currency);
+            _context.Currency_CreateOrUpdateOrDelete(new CurrencyDto()
+            {
+                Id = currencyId,
+                IsDeleted = true
+            });
         }
     }
 }

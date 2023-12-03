@@ -9,18 +9,22 @@ namespace GorimoozeWallet.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
-        public string UniqueNumber { get; set; }
+        public string WalletNumber { get; set; }
 
-        public User UserId { get; set; }
+        public long UserId { get; set; }
 
-        public Currency CurrencyId { get; set; }
+        public long CurrencyId { get; set; }
 
-        public decimal? Score { get; set; }
+        public double? Score { get; set; }
 
         public bool? IsLocked { get; set; }
 
         public DateTime? CreatedOn { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public User User { get; set; }
+
+        public Currency Currency { get; set; }
     }
 }

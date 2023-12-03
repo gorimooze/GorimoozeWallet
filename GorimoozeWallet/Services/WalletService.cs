@@ -20,33 +20,31 @@ namespace GorimoozeWallet.Services
             return _context.Wallet_GetAll();
         }
 
-        public WalletDto GetWalletById(long id)
-        {
-            return _context.Wallet_GetById(id);
-        }
-
         public WalletDto GetWalletByUserId(long userId)
         {
-            throw new NotImplementedException();
+            return _context.Wallet_GetByUserId(userId);
         }
 
         public void Create(WalletDto wallet)
         {
-            wallet.UniqueNumber = GenerateUniqueNumber(16);
             wallet.CreatedOn = DateTime.UtcNow;
             wallet.IsDeleted = false;
 
-            _context.Wallet_CreateOrUpdate(wallet);
+            _context.Wallet_CreateOrUpdateOrDelete(wallet);
         }
 
         public void Update(WalletDto wallet)
         {
-            _context.Wallet_CreateOrUpdate(wallet);
+            _context.Wallet_CreateOrUpdateOrDelete(wallet);
         }
 
         public void Delete(long id)
         {
-            _context.Wallet_Delete(id);
+            _context.Wallet_CreateOrUpdateOrDelete(new WalletDto()
+            {
+                Id = id,
+                IsDeleted = true
+            });
         }
 
         private string GenerateUniqueNumber(int length)

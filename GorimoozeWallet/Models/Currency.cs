@@ -22,7 +22,8 @@ namespace GorimoozeWallet.Models
 
         public string? ImageName { get; set; } // Image file name
         public byte[]? ImageData { get; set; } // Image data as a byte array
+        public bool IsDeleted { get; set; }
 
-        public ICollection<Wallet> Wallet { get; set; }
+        public ICollection<Wallet> Wallets { get; set; }
     }
 }

@@ -13,11 +13,20 @@ namespace GorimoozeWallet.Data
 
         public DbSet<User> User { get; set; }
         public DbSet<Currency> Currency { get; set; }
+        public DbSet<Wallet> Wallet { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Wallet>()
                 .HasKey(w => new { w.UserId, w.CurrencyId });
+            //modelBuilder.Entity<Wallet>()
+            //    .HasOne(w => w.User)
+            //    .WithMany(u => u.Wallets)
+            //    .HasForeignKey(w => w.UserId);
+            //modelBuilder.Entity<Wallet>()
+            //    .HasOne(w => w.Currency)
+            //    .WithMany(c => c.Wallets)
+            //    .HasForeignKey(w => w.CurrencyId);
         }
 
 
@@ -40,22 +49,25 @@ namespace GorimoozeWallet.Data
                 new SqlParameter("@id", SqlDbType.BigInt) { Value = id }
             };
 
-            return Database.SqlQueryRaw<CurrencyDto>("EXEC [dbo].[Currency_GetAllCurrency] {0}", parameters).FirstOrDefault();
+            return Database.SqlQueryRaw<CurrencyDto>("EXEC [dbo].[Currency_GetById] {0}", parameters).FirstOrDefault();
         }
 
         public void Currency_CreateOrUpdateOrDelete(CurrencyDto currency)
         {
             var parameters = new[]
             {
+                new SqlParameter("@id", SqlDbType.NVarChar) { Value = currency.Id },
                 new SqlParameter("@name", SqlDbType.NVarChar) { Value = currency.Name },
                 new SqlParameter("@shortName", SqlDbType.NVarChar) { Value = currency.ShortName },
                 new SqlParameter("@stateActivity", SqlDbType.Int) { Value = currency.StateActivity },
                 new SqlParameter("@isActive", SqlDbType.Bit) { Value = currency.IsActive },
+                new SqlParameter("@isDeleted", SqlDbType.Bit) { Value = currency.IsDeleted },
                 new SqlParameter("@imageName", SqlDbType.NVarChar) { Value = currency.ImageName },
                 new SqlParameter("@imageData", SqlDbType.VarBinary) { Value = currency.ImageData },
+                
             };
 
-            Database.ExecuteSqlRaw("EXEC [dbo].[Currency_GetAllCurrency] {0}, {1}, {2}, {3}, {4}, {5}", parameters);
+            Database.ExecuteSqlRaw("EXEC [dbo].[Currency_CreateOrUpdateOrDelete] {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}", parameters);
         }
 
         public ICollection<WalletDto> Wallet_GetAll()
@@ -63,20 +75,16 @@ namespace GorimoozeWallet.Data
             return Database.SqlQueryRaw<WalletDto>("EXEC [dbo].[Wallet_GetAll]").ToList();
         }
 
-        public WalletDto Wallet_GetById(long id)
+        public WalletDto Wallet_GetByUserId(long userId)
         {
-            var parameters = new[]
-            {
-                new SqlParameter("@id", SqlDbType.BigInt) { Value = id }
-            };
-
-            return Database.SqlQueryRaw<WalletDto>("EXEC [dbo].[Wallet_GetById] {0}", parameters).FirstOrDefault();
+            throw new NotImplementedException();
         }
 
-        public void Wallet_CreateOrUpdate(WalletDto wallet)
+        public void Wallet_CreateOrUpdateOrDelete(WalletDto wallet)
         {
             var parameters = new[]
             {
+                new SqlParameter("@id", SqlDbType.BigInt) { Value = wallet.Id },
                 new SqlParameter("@uniqueNumber", SqlDbType.NVarChar) { Value = wallet.UniqueNumber },
                 new SqlParameter("@userId", SqlDbType.BigInt) { Value = wallet.UserId },
                 new SqlParameter("@currencyId", SqlDbType.BigInt) { Value = wallet.CurrencyId },
@@ -86,17 +94,7 @@ namespace GorimoozeWallet.Data
                 new SqlParameter("@isDeleted", SqlDbType.Bit) { Value = wallet.IsDeleted }
             };
 
-            Database.SqlQueryRaw<WalletDto>("EXEC [dbo].[Wallet_GetById] {0}", parameters);
-        }
-
-        public void Wallet_Delete(long id)
-        {
-            var parameters = new[]
-            {
-                new SqlParameter("@id", SqlDbType.BigInt) { Value = id }
-            };
-
-            Database.SqlQueryRaw<WalletDto>("EXEC [dbo].[Wallet_Delete] {0}", parameters);
+            Database.SqlQueryRaw<WalletDto>("EXEC [dbo].[Wallet_CreateOrUpdateOrDelete] {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}", parameters);
         }
     }
 }

@@ -48,8 +48,8 @@ namespace GorimoozeWallet.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        public IActionResult Update([FromBody] WalletDto wallet)
+        [HttpPut("{walletId}")]
+        public IActionResult Update(long walletId, [FromBody] WalletDto wallet)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -58,13 +58,13 @@ namespace GorimoozeWallet.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(long id)
+        [HttpDelete("{walletId}")]
+        public IActionResult Delete(long walletId)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _walletService.Delete(id);
+            _walletService.Delete(walletId);
             return Ok();
         }
     }
