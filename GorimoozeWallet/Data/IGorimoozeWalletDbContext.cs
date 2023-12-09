@@ -11,5 +11,6 @@ namespace GorimoozeWallet.Data
         ICollection<WalletDto> Wallet_GetAll();
         void Wallet_CreateOrUpdateOrDelete(WalletDto wallet);
         WalletDto Wallet_GetByUserId(long userId);
+        ICollection<PortfolioDto> Portfolio_GetGetPortfoliosByWallet(string guidWallet);
     }
 }

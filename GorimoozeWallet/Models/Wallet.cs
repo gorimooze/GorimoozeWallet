@@ -13,10 +13,6 @@ namespace GorimoozeWallet.Models
 
         public long UserId { get; set; }
 
-        public long CurrencyId { get; set; }
-
-        public double? Score { get; set; }
-
         public bool? IsLocked { get; set; }
 
         public DateTime? CreatedOn { get; set; }

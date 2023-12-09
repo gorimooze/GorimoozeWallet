@@ -47,6 +47,26 @@ namespace GorimoozeWallet.Services
             });
         }
 
+        public ICollection<PortfolioDto> GetPortfolioListByWallet(string guidWallet)
+        {
+            return _context.Portfolio_GetGetPortfoliosByWallet(guidWallet);
+        }
+
+        public void CreatePortfolio(PortfolioDto portfolio)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdatePortfolio(PortfolioDto portfolio)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeletePortfolio(long id)
+        {
+            throw new NotImplementedException();
+        }
+
         private string GenerateUniqueNumber(int length)
         {
             const string characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

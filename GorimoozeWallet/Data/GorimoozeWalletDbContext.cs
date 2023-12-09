@@ -14,11 +14,12 @@ namespace GorimoozeWallet.Data
         public DbSet<User> User { get; set; }
         public DbSet<Currency> Currency { get; set; }
         public DbSet<Wallet> Wallet { get; set; }
+        public DbSet<Portfolio> Portfolio { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Wallet>()
-                .HasKey(w => new { w.UserId, w.CurrencyId });
+                .HasKey(w => new { w.UserId });
             //modelBuilder.Entity<Wallet>()
             //    .HasOne(w => w.User)
             //    .WithMany(u => u.Wallets)
@@ -85,16 +86,19 @@ namespace GorimoozeWallet.Data
             var parameters = new[]
             {
                 new SqlParameter("@id", SqlDbType.BigInt) { Value = wallet.Id },
-                new SqlParameter("@uniqueNumber", SqlDbType.NVarChar) { Value = wallet.UniqueNumber },
+                new SqlParameter("@uniqueNumber", SqlDbType.NVarChar) { Value = wallet.WalletNumber },
                 new SqlParameter("@userId", SqlDbType.BigInt) { Value = wallet.UserId },
-                new SqlParameter("@currencyId", SqlDbType.BigInt) { Value = wallet.CurrencyId },
-                new SqlParameter("@score", SqlDbType.Float) { Value = wallet.Score },
                 new SqlParameter("@isLocked", SqlDbType.Bit) { Value = wallet.IsLocked },
                 new SqlParameter("@createdOn", SqlDbType.DateTime) { Value = wallet.CreatedOn },
                 new SqlParameter("@isDeleted", SqlDbType.Bit) { Value = wallet.IsDeleted }
             };
 
             Database.SqlQueryRaw<WalletDto>("EXEC [dbo].[Wallet_CreateOrUpdateOrDelete] {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}", parameters);
+        }
+
+        public ICollection<PortfolioDto> Portfolio_GetGetPortfoliosByWallet(string guidWallet)
+        {
+            throw new NotImplementedException();
         }
     }
 }

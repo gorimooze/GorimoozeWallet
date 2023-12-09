@@ -6,13 +6,9 @@ namespace GorimoozeWallet.Dto
     {
         public long Id { get; set; }
 
-        public string UniqueNumber { get; set; }
+        public string WalletNumber { get; set; }
 
         public long UserId { get; set; }
-
-        public long CurrencyId { get; set; }
-
-        public double? Score { get; set; }
 
         public bool? IsLocked { get; set; }
 
