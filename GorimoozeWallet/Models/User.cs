@@ -23,7 +23,5 @@ namespace GorimoozeWallet.Models
         public string? Password { get; set; }
 
         public DateTime? CreatedOn { get; set; }
-
-        public ICollection<Wallet> Wallets { get; set; }
     }
 }

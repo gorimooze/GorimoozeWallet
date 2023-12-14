@@ -3,32 +3,23 @@ using GorimoozeWallet.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using GorimoozeWallet.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace GorimoozeWallet.Data
 {
-    public class GorimoozeWalletDbContext : DbContext, IGorimoozeWalletDbContext
+    public class GorimoozeWalletDbContext : IdentityDbContext<ApplicationUser, IdentityRole<long>, long>, IGorimoozeWalletDbContext
     {
-        public GorimoozeWalletDbContext(DbContextOptions<GorimoozeWalletDbContext> options) : base(options) 
-        { }
-
-        public DbSet<User> User { get; set; }
+        public GorimoozeWalletDbContext(DbContextOptions<GorimoozeWalletDbContext> options) : base(options)
+        {
+            Database.Migrate();
+        }
+        
         public DbSet<Currency> Currency { get; set; }
         public DbSet<Wallet> Wallet { get; set; }
         public DbSet<Portfolio> Portfolio { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Wallet>()
-                .HasKey(w => new { w.UserId });
-            //modelBuilder.Entity<Wallet>()
-            //    .HasOne(w => w.User)
-            //    .WithMany(u => u.Wallets)
-            //    .HasForeignKey(w => w.UserId);
-            //modelBuilder.Entity<Wallet>()
-            //    .HasOne(w => w.Currency)
-            //    .WithMany(c => c.Wallets)
-            //    .HasForeignKey(w => w.CurrencyId);
-        }
 
 
 
