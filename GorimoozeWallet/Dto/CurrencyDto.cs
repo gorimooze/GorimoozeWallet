@@ -10,8 +10,7 @@ namespace GorimoozeWallet.Dto
         public string ShortName { get; set; }
         public CurrencyStateActivityEnum StateActivity { get; set; }
         public bool IsActive { get; set; }
-        public string ImageName { get; set; } 
-        public byte[] ImageData { get; set; } 
-        public bool IsDeleted { get; set; }
+        //public string ImageName { get; set; } 
+        //public byte[] ImageData { get; set; } 
     }
 }

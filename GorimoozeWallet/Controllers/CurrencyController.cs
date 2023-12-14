@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GorimoozeWallet.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("currency")]
     public class CurrencyController : ControllerBase
     {
         private readonly ICurrencyService _currencyService;
@@ -16,7 +16,7 @@ namespace GorimoozeWallet.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("getAll")]
         public IActionResult GetAll()
         {
             var users = _currencyService.GetCurrencyList();
@@ -27,7 +27,7 @@ namespace GorimoozeWallet.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{currencyId}")]
+        [HttpGet("getById/{currencyId}")]
         public IActionResult GetById(long currencyId)
         {
             if (currencyId == 0)
@@ -38,37 +38,46 @@ namespace GorimoozeWallet.Controllers
             return Ok(model);
         }
 
-        [HttpPost]
-        public IActionResult Create([FromBody] CurrencyDto currency)
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] CurrencyDto currencyDto)
         {
-            if (currency == null)
+            if (currencyDto == null)
                 return BadRequest(ModelState);
 
-            _currencyService.Create(currency);
+            _currencyService.Create(currencyDto);
 
             return Ok("Successfully created");
         }
 
-        [HttpPut("{currencyId}")]
-        public IActionResult Update(long currencyId, [FromBody] CurrencyDto currency)
+        [HttpPut("update/{currencyId}")]
+        public IActionResult Update(long currencyId, [FromBody] CurrencyDto currencyDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _currencyService.Update(currency);
+            if (currencyId != currencyDto.Id)
+                return BadRequest(ModelState);
 
-            return NoContent();
+            if (!_currencyService.CurrencyExists(currencyId))
+                return NotFound();
+
+            _currencyService.Update(currencyId, currencyDto);
+
+            return Ok("Successfully updated");
         }
 
-        [HttpDelete("{currencyId}")]
+        [HttpDelete("delete/{currencyId}")]
         public IActionResult Delete(long currencyId)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (!_currencyService.CurrencyExists(currencyId))
+                return NotFound();
+
             _currencyService.Delete(currencyId);
 
-            return NoContent();
+            return Ok("Successfully deleted");
         }
     }
 }

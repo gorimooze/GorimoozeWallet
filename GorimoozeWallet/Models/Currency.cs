@@ -20,9 +20,8 @@ namespace GorimoozeWallet.Models
 
         public bool? IsActive { get; set; }
 
-        public string? ImageName { get; set; } // Image file name
-        public byte[]? ImageData { get; set; } // Image data as a byte array
-        public bool IsDeleted { get; set; }
+        //public string? ImageName { get; set; } 
+        //public byte[]? ImageData { get; set; } 
 
         public ICollection<Wallet> Wallets { get; set; }
     }
