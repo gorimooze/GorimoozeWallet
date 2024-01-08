@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using GorimoozeWallet.Data.Entities;
 
 namespace GorimoozeWallet.Models
 {
@@ -12,12 +11,15 @@ namespace GorimoozeWallet.Models
 
         public string WalletNumber { get; set; }
 
-        public bool? IsLocked { get; set; }
+        public bool IsLocked { get; set; }
+
+        public double Score { get; set; }
 
         public DateTime? CreatedOn { get; set; }
-
-        public bool IsDeleted { get; set; }
+        public long CurrencyId { get; set; }
+        public long PortfolioId { get; set; }
 
         public Currency Currency { get; set; }
+        public Portfolio Portfolio { get; set; }
     }
 }

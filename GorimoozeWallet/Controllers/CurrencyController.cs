@@ -39,7 +39,7 @@ namespace GorimoozeWallet.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult Create([FromBody] CurrencyDto currencyDto)
+        public IActionResult Create([FromForm] CurrencyDto currencyDto)
         {
             if (currencyDto == null)
                 return BadRequest(ModelState);

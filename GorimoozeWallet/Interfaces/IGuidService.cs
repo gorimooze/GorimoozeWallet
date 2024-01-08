@@ -1,4 +1,4 @@
-﻿namespace GorimoozeWallet.Helper.Interfaces
+﻿namespace GorimoozeWallet.Interfaces
 {
     public interface IGuidService
     {

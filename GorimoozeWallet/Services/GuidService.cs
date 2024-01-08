@@ -1,6 +1,6 @@
-﻿using GorimoozeWallet.Helper.Interfaces;
+﻿using GorimoozeWallet.Interfaces;
 
-namespace GorimoozeWallet.Helper.Extensions
+namespace GorimoozeWallet.Services
 {
     public class GuidService : IGuidService
     {

@@ -36,13 +36,24 @@ namespace GorimoozeWallet.Services
 
         public void Create(CurrencyDto currencyDto)
         {
-            _context.Add(new Currency()
+            var currency = new Currency()
             {
                 Name = currencyDto.Name,
                 ShortName = currencyDto.ShortName,
                 StateActivity = currencyDto.StateActivity,
-                IsActive = currencyDto.IsActive
-            });
+                IsActive = currencyDto.IsActive,
+            };
+
+            if (currencyDto.Image != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    currencyDto.Image.CopyTo(memoryStream);
+                    currency.Image = memoryStream.ToArray();
+                }
+            }
+
+            _context.Add(currency);
             _context.SaveChanges();
         }
 

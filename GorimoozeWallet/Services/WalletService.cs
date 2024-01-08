@@ -14,42 +14,34 @@ namespace GorimoozeWallet.Services
             _context = context;
         }
 
-
         public ICollection<WalletDto> GetWalletList()
         {
-            return _context.Wallet_GetAll();
+            throw new NotImplementedException();
         }
 
         public WalletDto GetWalletByUserId(long userId)
         {
-            return _context.Wallet_GetByUserId(userId);
+            throw new NotImplementedException();
         }
 
         public void Create(WalletDto wallet)
         {
-            wallet.CreatedOn = DateTime.UtcNow;
-            wallet.IsDeleted = false;
-
-            _context.Wallet_CreateOrUpdateOrDelete(wallet);
+            throw new NotImplementedException();
         }
 
         public void Update(WalletDto wallet)
         {
-            _context.Wallet_CreateOrUpdateOrDelete(wallet);
+            throw new NotImplementedException();
         }
 
         public void Delete(long id)
         {
-            _context.Wallet_CreateOrUpdateOrDelete(new WalletDto()
-            {
-                Id = id,
-                IsDeleted = true
-            });
+            throw new NotImplementedException();
         }
 
         public ICollection<PortfolioDto> GetPortfolioListByWallet(string guidWallet)
         {
-            return _context.Portfolio_GetGetPortfoliosByWallet(guidWallet);
+            throw new NotImplementedException();
         }
 
         public void CreatePortfolio(PortfolioDto portfolio)

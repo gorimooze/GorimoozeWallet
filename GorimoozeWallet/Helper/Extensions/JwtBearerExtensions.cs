@@ -81,12 +81,15 @@ namespace GorimoozeWallet.Helper.Extensions
 
         public static ClaimsPrincipal? GetPrincipalFromExpiredToken(this IConfiguration configuration, string? token)
         {
+            var sk = configuration["Jwt:Secret"];
+            var skBytes = Encoding.UTF8.GetBytes(sk!);
+            var skFinal = new SymmetricSecurityKey(skBytes);
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!)),
+                IssuerSigningKey = skFinal,
                 ValidateLifetime = false
             };
 
@@ -96,6 +99,29 @@ namespace GorimoozeWallet.Helper.Extensions
                 throw new SecurityTokenException("Invalid token");
 
             return principal;
+        }
+
+        public static long? GetUserIdFromToken(this IConfiguration configuration, string? token)
+        {
+            try
+            {
+                var principal = configuration.GetPrincipalFromExpiredToken(token);
+                if (principal == null)
+                    return null;
+
+                var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null)
+                    return null;
+
+                if (long.TryParse(userIdClaim.Value, out long userId))
+                    return userId;
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
