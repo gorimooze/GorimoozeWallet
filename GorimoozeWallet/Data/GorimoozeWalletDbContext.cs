@@ -23,6 +23,8 @@ namespace GorimoozeWallet.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Wallet>()
                 .HasOne(c => c.Currency)
                 .WithMany(p => p.Wallets)
@@ -32,11 +34,6 @@ namespace GorimoozeWallet.Data
                 .HasOne(c => c.Portfolio)
                 .WithMany(p => p.Wallets)
                 .HasForeignKey(c => c.PortfolioId);
-
-            modelBuilder.Entity<IdentityUserLogin<long>>().HasNoKey();
-            modelBuilder.Entity<IdentityUserRole<long>>().HasNoKey();
-            //modelBuilder.Entity<IdentityUserClaim<long>>().HasNoKey();
-            modelBuilder.Entity<IdentityUserToken<long>>().HasNoKey();
         }
     }
 }

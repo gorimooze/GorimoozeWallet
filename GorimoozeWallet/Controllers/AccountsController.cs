@@ -99,7 +99,15 @@ namespace GorimoozeWallet.Controllers
 
             if (findUser == null) throw new Exception($"User {request.Email} not found");
 
-            await _userManager.AddToRoleAsync(findUser, RoleConsts.Member);
+            try
+            {
+                await _userManager.AddToRoleAsync(findUser, RoleConsts.Member);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
 
             return await Authenticate(new AuthRequest
             {
