@@ -2,62 +2,86 @@
 using GorimoozeWallet.Dto;
 using GorimoozeWallet.Interfaces;
 using System.Text;
+using GorimoozeWallet.Models;
+using AutoMapper;
 
 namespace GorimoozeWallet.Services
 {
     public class WalletService : IWalletService
     {
-        private readonly IGorimoozeWalletDbContext _context;
+        private readonly GorimoozeWalletDbContext _context;
+        private readonly IMapper _mapper;
 
-        public WalletService(IGorimoozeWalletDbContext context)
+        public WalletService(GorimoozeWalletDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public ICollection<WalletDto> GetWalletList()
+        public ICollection<Wallet> GetList()
         {
-            throw new NotImplementedException();
+            return _context.Wallet.ToList();
         }
 
-        public WalletDto GetWalletByUserId(long userId)
+        public bool Exists(long walletId)
         {
-            throw new NotImplementedException();
+            return _context.Wallet.Any(w => w.Id == walletId);
         }
 
-        public void Create(WalletDto wallet)
+        public WalletDto GetById(long walletId)
         {
-            throw new NotImplementedException();
+            var wallet = _context.Wallet.Where(w => w.Id == walletId);
+            var walletDto = _mapper.Map<WalletDto>(wallet);
+
+            return walletDto;
         }
 
-        public void Update(WalletDto wallet)
+        public ICollection<Wallet> GetListByUserId(long userId)
         {
-            throw new NotImplementedException();
+            return _context.Wallet.Where(w => w.Portfolio.UserId == userId).ToList();
         }
 
-        public void Delete(long id)
+        public void Create(WalletDto walletDto)
         {
-            throw new NotImplementedException();
+            _context.Wallet.Add(new Wallet()
+            {
+                WalletNumber = GenerateUniqueNumber(16),
+                IsLocked = false,
+                Score = 0.0,
+                CreatedOn = DateTime.UtcNow,
+                UpdatedOn = DateTime.UtcNow,
+                CurrencyId = walletDto.CurrencyId,
+                PortfolioId = walletDto.PortfolioId,
+                IsDeleted = false
+            });
+            _context.SaveChanges();
         }
 
-        public ICollection<PortfolioDto> GetPortfolioListByWallet(string guidWallet)
+        public void Update(long walletId, WalletDto walletDto)
         {
-            throw new NotImplementedException();
+            _context.Wallet.Update(new Wallet()
+            {
+                Id = walletId,
+                Score = walletDto.Score,
+                UpdatedOn = DateTime.UtcNow
+            });
+            _context.SaveChanges();
         }
 
-        public void CreatePortfolio(PortfolioDto portfolio)
+        public void Delete(long walletId)
         {
-            throw new NotImplementedException();
+            var existingWallet = _context.Wallet.Find(walletId);
+            if (existingWallet != null)
+            {
+                _context.Wallet.Update(new Wallet()
+                {
+                    UpdatedOn = DateTime.UtcNow,
+                    IsDeleted = true,
+                });
+                _context.SaveChanges();
+            }
         }
 
-        public void UpdatePortfolio(PortfolioDto portfolio)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeletePortfolio(long id)
-        {
-            throw new NotImplementedException();
-        }
 
         private string GenerateUniqueNumber(int length)
         {

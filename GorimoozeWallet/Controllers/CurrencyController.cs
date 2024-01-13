@@ -19,12 +19,12 @@ namespace GorimoozeWallet.Controllers
         [HttpGet("getAll")]
         public IActionResult GetAll()
         {
-            var users = _currencyService.GetCurrencyList();
+            var currencies = _currencyService.GetCurrencyList();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(users);
+            return Ok(currencies);
         }
 
         [HttpGet("getById/{currencyId}")]

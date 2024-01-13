@@ -2,7 +2,6 @@
 using GorimoozeWallet.Helper.Extensions;
 using GorimoozeWallet.Interfaces;
 using GorimoozeWallet.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GorimoozeWallet.Controllers
@@ -19,7 +18,36 @@ namespace GorimoozeWallet.Controllers
             _portfolioService = portfolioService;
             _configuration = configuration;
         }
-        
+
+
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            var portfolioList = _portfolioService.GetList();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(portfolioList);
+        }
+
+        [HttpGet("getById/{portfolioId}")]
+        public IActionResult GetById(long portfolioId)
+        {
+            if (portfolioId == 0)
+                return BadRequest(ModelState);
+
+            if (_portfolioService.Exists(portfolioId))
+            {
+                ModelState.AddModelError("", "Portfolio was not found");
+                return BadRequest(ModelState);
+            }
+
+            var portfolioDto = _portfolioService.GetById(portfolioId);
+
+            return Ok(portfolioDto);
+        }
+
         [HttpPost("create")]
         public IActionResult Create([FromBody] PortfolioDto portfolioDto)
         {
@@ -41,6 +69,40 @@ namespace GorimoozeWallet.Controllers
             _portfolioService.Create(portfolioDto);
 
             return Ok("Successfully created");
+        }
+
+        [HttpPut("update/{portfolioId}")]
+        public IActionResult Update(long portfolioId, [FromBody] PortfolioDto portfolioDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (portfolioId != portfolioDto.Id)
+            {
+                ModelState.AddModelError("", "Ids are not equal");
+                return BadRequest(ModelState);
+            }
+
+            if (!_portfolioService.Exists(portfolioId))
+                return NotFound();
+
+            _portfolioService.Update(portfolioId, portfolioDto);
+
+            return Ok("Successfully updated");
+        }
+
+        [HttpDelete("delete/{portfolioId}")]
+        public IActionResult Delete(long portfolioId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_portfolioService.Exists(portfolioId))
+                return NotFound();
+
+            _portfolioService.Delete(portfolioId);
+
+            return Ok("Successfully deleted");
         }
     }
 }

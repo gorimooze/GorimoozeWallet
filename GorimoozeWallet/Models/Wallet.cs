@@ -16,8 +16,10 @@ namespace GorimoozeWallet.Models
         public double Score { get; set; }
 
         public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
         public long CurrencyId { get; set; }
         public long PortfolioId { get; set; }
+        public bool IsDeleted { get; set; }
 
         public Currency Currency { get; set; }
         public Portfolio Portfolio { get; set; }
