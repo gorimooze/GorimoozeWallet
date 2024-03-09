@@ -11,5 +11,6 @@ namespace GorimoozeWallet.Interfaces
         void Create(PortfolioDto portfolioDto);
         void Update(long portfolioId, PortfolioDto portfolioDto);
         void Delete(long portfolioId);
+        ICollection<Portfolio> GetListByUserId(long userId);
     }
 }

@@ -1,9 +1,12 @@
 using System.Text;
 using GorimoozeWallet.Data;
 using GorimoozeWallet.Data.Entities;
+using GorimoozeWallet.Helper.Hubs;
 using GorimoozeWallet.Interfaces;
+using GorimoozeWallet.Interfaces.pages;
 using GorimoozeWallet.Services;
 using GorimoozeWallet.Services.Identity;
+using GorimoozeWallet.Services.pages;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,11 +25,13 @@ builder.Services.AddDbContext<GorimoozeWalletDbContext>(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 builder.Services.AddScoped<IPortfolioService, PortfolioService>();
+builder.Services.AddScoped<IWalletService, WalletService>();
+builder.Services.AddScoped<IPageService, PageService>();
 
 builder.Services.AddAuthentication(opt => {
-        opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -40,9 +45,24 @@ builder.Services.AddAuthentication(opt => {
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!))
         };
     });
+
+// Configure CORS to allow requests from the frontend URL
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3000") // Frontend application URL
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials(); // Needed for SignalR
+    });
+});
+
+// Add SignalR services to the application.
+builder.Services.AddSignalR();
+
 builder.Services.AddAuthorization(options => options.DefaultPolicy =
-    new AuthorizationPolicyBuilder
-            (JwtBearerDefaults.AuthenticationScheme)
+    new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
         .RequireAuthenticatedUser()
         .Build());
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<long>>()
@@ -74,7 +94,7 @@ builder.Services.AddSwaggerGen(option =>
                     Id = "Bearer"
                 }
             },
-            new string[]{}
+            new string[] {}
         }
     });
 });
@@ -89,7 +109,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Use CORS policy
+app.UseCors();
+
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Map SignalR hubs.
+app.MapHub<ChatHub>("/chatHub");
+
 app.MapControllers();
 app.Run();

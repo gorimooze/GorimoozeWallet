@@ -22,6 +22,11 @@ namespace GorimoozeWallet.Services
             return _context.Portfolio.ToList();
         }
 
+        public ICollection<Portfolio> GetListByUserId(long userId)
+        {
+            return _context.Portfolio.Where(p => p.UserId == userId).ToList();
+        }
+
         public bool Exists(long portfolioId)
         {
             return _context.Portfolio.Any(p => p.Id == portfolioId);
@@ -38,6 +43,7 @@ namespace GorimoozeWallet.Services
         {
             _context.Add(new Portfolio()
             {
+                Name = portfolioDto.Name,
                 IsLocked = false,
                 CreatedOn = DateTime.UtcNow,
                 UpdatedOn = DateTime.UtcNow,
@@ -52,6 +58,7 @@ namespace GorimoozeWallet.Services
             _context.Portfolio.Update(new Portfolio()
             {
                 Id = portfolioId,
+                Name = portfolioDto.Name,
                 IsLocked = portfolioDto.IsLocked,
                 CreatedOn = portfolioDto.CreatedOn,
                 UpdatedOn = DateTime.UtcNow,

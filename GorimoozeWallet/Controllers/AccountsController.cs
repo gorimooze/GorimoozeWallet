@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using GorimoozeWallet.Data;
 using Microsoft.EntityFrameworkCore;
+using GorimoozeWallet.Dto;
+using GorimoozeWallet.Interfaces.pages;
+using GorimoozeWallet.Dto.pages;
 
 namespace GorimoozeWallet.Controllers
 {
@@ -19,13 +22,15 @@ namespace GorimoozeWallet.Controllers
         private readonly GorimoozeWalletDbContext _context;
         private readonly ITokenService _tokenService;
         private readonly IConfiguration _configuration;
+        private readonly IPageService _pageService;
 
-        public AccountsController(ITokenService tokenService, GorimoozeWalletDbContext context, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public AccountsController(ITokenService tokenService, GorimoozeWalletDbContext context, UserManager<ApplicationUser> userManager, IConfiguration configuration, IPageService pageService)
         {
             _tokenService = tokenService;
             _context = context;
             _userManager = userManager;
             _configuration = configuration;
+            _pageService = pageService;
         }
 
         [HttpPost("login")]
@@ -182,6 +187,27 @@ namespace GorimoozeWallet.Controllers
             }
 
             return Ok();
+        }
+        
+        [HttpGet]
+        [Route("get-page-profile")]
+        public IActionResult GetPageProfile()
+        {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var userId = _configuration.GetUserIdFromToken(token);
+
+            IList<ProfileDto> list = new List<ProfileDto>();
+            if (userId != null)
+            {
+                list = _pageService.Profile_GetByUserId(userId.Value);
+            }
+            else
+            {
+                ModelState.AddModelError("", "User was not found, apparently it is necessary to authorize again");
+                return BadRequest(ModelState);
+            }
+
+            return Ok(list);
         }
     }
 }

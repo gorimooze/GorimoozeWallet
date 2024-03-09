@@ -1,7 +1,7 @@
 ﻿using GorimoozeWallet.Dto;
 using GorimoozeWallet.Helper.Extensions;
 using GorimoozeWallet.Interfaces;
-using GorimoozeWallet.Services;
+using GorimoozeWallet.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GorimoozeWallet.Controllers
@@ -48,6 +48,26 @@ namespace GorimoozeWallet.Controllers
             return Ok(portfolioDto);
         }
 
+        [HttpGet("getAllByToken")]
+        public IActionResult GetAllByToken()
+        {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var userId = _configuration.GetUserIdFromToken(token);
+            ICollection<Portfolio> portfolioList = new List<Portfolio>();
+
+            if (userId != null)
+            {
+                portfolioList = _portfolioService.GetListByUserId(userId.Value);
+            }
+            else
+            {
+                ModelState.AddModelError("", "User was not found, apparently it is necessary to authorize again");
+                return BadRequest(ModelState);
+            }
+
+            return Ok(portfolioList);
+        }
+
         [HttpPost("create")]
         public IActionResult Create([FromBody] PortfolioDto portfolioDto)
         {
@@ -58,7 +78,7 @@ namespace GorimoozeWallet.Controllers
 
             if (userId != null)
             {
-                portfolioDto.UserId = (long)userId;
+                portfolioDto.UserId = userId.Value;
             }
             else
             {

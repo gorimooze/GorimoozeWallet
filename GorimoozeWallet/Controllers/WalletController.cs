@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 namespace GorimoozeWallet.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("wallet")]
     public class WalletController : ControllerBase
     {
         private readonly IWalletService _walletService;
